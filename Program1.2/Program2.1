@@ -1,0 +1,73 @@
+import tkinter as tk
+from PIL import Image, ImageTk
+
+price_list = {
+    "Apple": 20,
+    "Orange": 30,
+    "Mango": 40,
+}
+
+selected_items = {} 
+
+def calculate_total():
+    try:
+        total_amount = 0
+        for item, quantity in selected_items.items():
+            total_amount += quantity * price_list[item]
+
+        result_label.config(text=f"Total amount to pay: ₱{total_amount}", fg="green")
+    except ValueError:
+        result_label.config(text="Please enter valid quantities!", fg="red")
+
+def show_welcome():
+    welcome_label.pack_forget()
+    welcome_button.pack_forget()
+    welcome_frame.pack_forget()
+    fruit_frame.pack()
+
+def add_to_cart(fruit, quantity_entry):
+    try:
+        quantity = int(quantity_entry.get())
+        selected_items[fruit] = quantity
+    except ValueError:
+        result_label.config(text="Please enter valid quantities!", fg="red")
+
+root = tk.Tk()
+root.title("Fruit Shop")
+root.geometry("400x350")
+root.configure(bg="lightblue")
+
+welcome_frame = tk.Frame(bg="lightblue")
+welcome_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+welcome_label = tk.Label(welcome_frame, text="Welcome to Mich's Fruit Shop!", font=("Arial", 18, "bold"), bg="lightblue", fg="darkgreen")
+welcome_label.pack(pady=50)
+
+welcome_button = tk.Button(welcome_frame, text="Enter Shop", command=show_welcome, bg="yellow", fg="black")
+welcome_button.pack()
+
+fruit_frame = tk.Frame(root, bg="lightblue")
+
+price_label = tk.Label(fruit_frame, text="Price List:", font=("Arial", 14, "bold"), bg="lightblue", fg="black")
+price_label.pack()
+
+for fruit, price in price_list.items():
+    label = tk.Label(fruit_frame, text=f"{fruit} - {price} pesos", bg="lightblue", fg="black")
+    label.pack()
+
+    quantity_label = tk.Label(fruit_frame, text="Quantity:", bg="lightblue", fg="black")
+    quantity_label.pack()
+
+    entry = tk.Entry(fruit_frame)
+    entry.pack()
+
+    add_button = tk.Button(fruit_frame, text="Add to Cart", command=lambda f=fruit, e=entry: add_to_cart(f, e), bg="yellow", fg="black")
+    add_button.pack()
+
+calculate_button = tk.Button(fruit_frame, text="Calculate", command=calculate_total, bg="yellow", fg="black")
+calculate_button.pack()
+
+result_label = tk.Label(fruit_frame, text="", bg="lightblue", font=("Arial", 12, "bold"))
+result_label.pack()
+
+root.mainloop()
